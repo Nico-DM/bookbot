@@ -1,23 +1,26 @@
-def count_words(text):
+def get_num_words(text: str) -> int:
     words = text.split()
     return len(words)
 
-def count_characters(text):
-    character_counts = {}
-    for character in text:
-        lower_character = character.lower()
-        if lower_character in character_counts:
-            character_counts[lower_character] += 1
+
+def get_chars_dict(text: str) -> dict[str, int]:
+    chars = {}
+    for c in text:
+        lowered = c.lower()
+        if lowered in chars:
+            chars[lowered] += 1
         else:
-            character_counts[lower_character] = 1
-    return character_counts
+            chars[lowered] = 1
+    return chars
 
-def sort_on(character):
-    return character["num"]
 
-def sort_counts(dictionary):
-    character_list = []
-    for character in dictionary:
-        character_list.append({"char": character, "num": dictionary[character]})
-    character_list.sort(reverse=True, key=sort_on)
-    return character_list
+def sort_on(char_count: tuple[str, int]) -> int:
+    return char_count[1]
+
+
+def chars_dict_to_sorted_list(num_chars_dict: dict[str, int]) -> list[tuple[str, int]]:
+    chars_list: list[tuple[str, int]] = []
+    for char in num_chars_dict:
+        count = num_chars_dict[char]
+        chars_list.append((char, count))
+    return sorted(chars_list, reverse=True, key=sort_on)

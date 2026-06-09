@@ -1,30 +1,43 @@
-from stats import count_words, count_characters, sort_counts
 import sys
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
 
-def get_book_test(filepath):
-    with open(filepath) as f:
-        contents = f.read()
-    return contents
 
-def main():
-    if len(sys.argv) != 2:
+def main() -> None:
+    if len(sys.argv) < 2:
         print("Usage: python3 main.py <path_to_book>")
         sys.exit(1)
+    book_path = sys.argv[1]
 
-    filepath = sys.argv[1]
-    text = get_book_test(filepath)
-    word_count = count_words(text)
-    character_counts = count_characters(text)
-    sorted_counts = sort_counts(character_counts)
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
 
+
+def get_book_text(path: str) -> str:
+    with open(path) as f:
+        return f.read()
+
+
+def print_report(
+    book_path: str, num_words: int, chars_sorted_list: list[tuple[str, int]]
+) -> None:
     print("============ BOOKBOT ============")
-    print(f"Analyzing book found at {filepath}...")
+    print(f"Analyzing book found at {book_path}...")
     print("----------- Word Count ----------")
-    print(f"Found {word_count} total words")
+    print(f"Found {num_words} total words")
     print("--------- Character Count -------")
-    for character in sorted_counts:
-        if character["char"].isalpha():
-            print(f"{character["char"]}: {character["num"]}")
+    for char, count in chars_sorted_list:
+        if not char.isalpha():
+            continue
+        print(f"{char}: {count}")
+
     print("============= END ===============")
+
 
 main()
